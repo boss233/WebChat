@@ -31,18 +31,17 @@ public class WebSocketStompConfig extends AbstractWebSocketMessageBrokerConfigur
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
 
-        config.enableStompBrokerRelay("/topic", "/queue")
-                .setRelayHost("localhost")
-                .setRelayPort(61613)
-                .setClientLogin("root")
-                .setClientPasscode("root123");
+        // config.enableStompBrokerRelay("/topic", "/queue")
+        //         .setRelayHost("localhost")
+        //         .setRelayPort(61613)
+        //         .setClientLogin("root")
+        //         .setClientPasscode("root123");
 
-        //config.enableSimpleBroker("/topic", "/queue");
+        config.enableSimpleBroker("/topic", "/queue");
 
         config.setApplicationDestinationPrefixes("/app");
         config.setUserDestinationPrefix("/user");
 
-        // config.configureBrokerChannel().setInterceptors(config.configureBrokerChannel().setInterceptors(applicationContext.getBean(WebSocketSecurityInterceptor.class));
     }
 
     @Override
