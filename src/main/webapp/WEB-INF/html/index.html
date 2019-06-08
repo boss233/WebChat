@@ -27,36 +27,32 @@
 
 </style>
 
-<!-- <script type="text/javascript">
-
-    var count = 1;
-
-    function appendMessage() {
-
-        var container = document.getElementById('left');
-
-        var message = document.createElement('p');
-        message.innerHTML = "This is a test message " + count++;
-        
-        container.appendChild(message);
-
-    }
-
-</script> -->
-
 
 <body>
     <form action="">
         <input type="text" name="username" id="username"><span id="loginUser">未登录</span><br>
         <input type="button" value="connect" onclick="connect()"><br>
         <input type="button" value="disconnect" onclick="disconnect()"><br>
-        <!-- <input type="button" value="subTopic" onclick="subscribeUserConnect()"><br>
-        <input type="button" value="subQueue" onclick="subscribeQueue()"><br>
-        <input type="button" value="sendMessage" onclick="sendMessage()"><br> -->
+        <input type="text" name="message" id="message">
+        <input type="button" value="sendUserMessage" onclick="sendUserMessage()"><br>
     </form>
     
-    <div class="left" name="left" id="left"><p>在线用户列表 count: <span id="onlineCount">0</span></p></div>
-    <div class="left" name="right" id="right"><p>通话记录</p></div>
+    <div class="left" name="left" id="left">
+        <p>在线用户列表 count: <span id="onlineCount">0</span></p>
+        <form id="onlineUser"></form>
+    </div>
+
+    <div class="left" name="right" id="right">
+        <p>通话记录</p>
+    </div>
 
 </body>
+
+<!-- <script>
+    
+    addOnlineUser("1", "1");
+    addOnlineUser("2", "2");
+    addOnlineUser("3", "3");
+</script> -->
+
 </html>

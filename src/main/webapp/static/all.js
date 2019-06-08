@@ -32,7 +32,7 @@ function connect() {
         initSubscribeConnect()
 
         getAreadyOnlineUser()
-        sendMessage();
+        sendLoginMessage();
 
     }, connectError);
 
@@ -60,6 +60,11 @@ function initSubscribeConnect() {
     stompClient.subscribe("/user/queue/message", function (result) {
         //var message = JSON.parse(result.body);
         //addOnlineUser(message.username, message.sessionId);
+        var message = JSON.parse(result.body);
+
+        addMessage(message.sendFrom, message.sendTo, message.content);
+
+        //alert("get message");
     }, {name:name});
 
 }
@@ -100,7 +105,7 @@ function getAreadyOnlineUser() {
     });
 }
 
-function sendMessage() {
+function sendLoginMessage() {
     var content = JSON.stringify({'name': name});
     stompClient.send("/app/userOnline", {}, content);
 }
@@ -111,13 +116,21 @@ function addOnlineUser(username, sessionId) {
     onlineCount++;
     updateOnlineCount();
 
-    var container = document.getElementById('left');
+    var container = document.getElementById('onlineUser');
 
-    var onlineuser = document.createElement('p');
-    onlineuser.innerHTML = "Online User: " + username;
+    var onlineuser = document.createElement('input');
+    onlineuser.setAttribute("type", "checkbox");
     onlineuser.setAttribute("id", sessionId);
+    onlineuser.setAttribute("name", "onlineUser");
+    onlineuser.setAttribute("value", sessionId);
+
+    var userLabel = document.createElement('label');
+    userLabel.setAttribute('for', sessionId);
+    userLabel.innerText = "Online User: " + username;
 
     container.appendChild(onlineuser);
+    onlineuser.after(userLabel);
+    userLabel.after(document.createElement('br'))
 
 }
 
@@ -126,11 +139,51 @@ function deleteOnlineUser(sessionId) {
     onlineCount--;
     updateOnlineCount();
 
+    var userInput = document.getElementById(sessionId);
+
+    document.querySelector('label[for="'+userInput.id+'"]').remove();
     document.getElementById(sessionId).remove();
-
+    
 }
-
 
 function updateOnlineCount() {
     document.getElementById("onlineCount").innerText = onlineCount;
+}
+
+function sendUserMessage() {
+    var allUser = document.getElementsByName("onlineUser");
+    for (var i=0; i<allUser.length; i++) {
+        if (allUser[i].checked) {
+            // alert(allUser[i].value);
+            var message = document.getElementById("message").value;
+
+            //var userInput = document.getElementById(allUser[i].value);
+            //var toUsername = document.querySelector('label[for="'+userInput.id+'"]').innerText.substr(13);
+
+            var sendMessage = {"sendFrom": sessionId, "sendTo": allUser[i].value, "content": message};
+            stompClient.send("/app/userMessage", {}, JSON.stringify(sendMessage));
+
+            if (sessionId != allUser[i].value) {
+                addMessage(sessionId, allUser[i].value, message);
+            }
+        }
+    }
+}
+
+function addMessage(sendFrom, sendTo, message) {
+
+    var container = document.getElementById('right');
+
+    var fromUsername = document.querySelector('label[for="'+sendFrom+'"]').innerText.substr(13);
+    var toUsername = document.querySelector('label[for="'+sendTo+'"]').innerText.substr(13);
+
+    var messageInfo = document.createElement('p');
+    messageInfo.innerText = "发信人: " + fromUsername + " " + "收信人: " + toUsername;
+
+    var messageText = document.createElement('p');
+    messageText.innerText = "内容: " + message;
+
+    container.appendChild(messageInfo);
+    messageInfo.after(messageText);
+
 }

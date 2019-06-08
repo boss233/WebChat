@@ -25,9 +25,6 @@ public class WebSocketEventListener {
     @Autowired
     private OnlineUserData onlineUserData;
 
-    // @Autowired
-    // private SimpUserRegistry userRegistry;
-
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
@@ -37,8 +34,7 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectedListener(SessionConnectedEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        System.out.println("user connected: " + headerAccessor.getSessionId());
+
     }
 
     @EventListener
@@ -58,8 +54,6 @@ public class WebSocketEventListener {
         String sessionId = headerAccessor.getSessionId();
 
         messageSend.sendOfflineUser(sessionId);
-
-        System.out.println("disconnect: " + sessionId);
         onlineUserData.deleteUser(sessionId);
 
     }
